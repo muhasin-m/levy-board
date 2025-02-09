@@ -1,0 +1,20 @@
+# Ignore environment variables
+server/.env
+client/.env
+
+# Ignore node_modules (if using Node.js)
+node_modules/
+client/node_modules/
+server/node_modules/
+
+# Ignore log files
+*.log
+
+# Ignore dependency lock files (optional)
+package-lock.json
+yarn.lock
+
+# Ignore build folders
+client/build/
+server/dist/
+server/.cache/
