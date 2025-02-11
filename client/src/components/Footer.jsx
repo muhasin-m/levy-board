@@ -5,7 +5,7 @@ const Footer = () => {
     <footer
       className="bg-dark text-white text-center py-3"
       style={{
-        position: "fixed",
+        // position: "fixed",
         bottom: 0,
         width: "100%",
       }}

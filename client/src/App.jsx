@@ -7,16 +7,16 @@ import { SalesProvider } from "./context/SalesContext";
 
 function App() {
   return (
-    <SalesProvider>
-      <BrowserRouter>
+    <BrowserRouter>
+      <SalesProvider>
         <Header />
         <Routes>
           <Route path="/" element={<Dashboard />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
         <Footer />
-      </BrowserRouter>
-    </SalesProvider>
+      </SalesProvider>
+    </BrowserRouter>
   );
 }
 

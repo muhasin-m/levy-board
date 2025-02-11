@@ -1,6 +1,6 @@
 const SalesData = require("../models/SalesData.js");
 
-// Get all sales data
+// Get all sales records
 const getDashboardData = async (req, res) => {
   try {
     const data = await SalesData.find();
@@ -10,7 +10,7 @@ const getDashboardData = async (req, res) => {
   }
 };
 
-// Add sales data
+// Create a new sales record
 const addDashboardData = async (req, res) => {
   const { month, plan, actual, workingDays } = req.body;
   try {
@@ -22,4 +22,33 @@ const addDashboardData = async (req, res) => {
   }
 };
 
-module.exports = { getDashboardData, addDashboardData };
+// Update a sales record
+const updateSalesRecord = async (req, res) => {
+  try {
+    const updatedSale = await SalesData.findByIdAndUpdate(
+      req.params.id,
+      req.body,
+      { new: true }
+    );
+    res.json(updatedSale);
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+};
+
+// Remove a sales record
+const removeSalesRecord = async (req, res) => {
+  try {
+    await SalesData.findByIdAndDelete(req.params.id);
+    res.json({ message: "Sale record deleted" });
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+};
+
+module.exports = {
+  getDashboardData,
+  addDashboardData,
+  updateSalesRecord,
+  removeSalesRecord,
+};
