@@ -75,8 +75,7 @@ const SalesTable = () => {
             Sales Performance Overview
           </h5>
           <p className="mb-2 pb-2 text-muted ">
-            Track your car sales performance with detailed data for effective
-            decision-making.
+            Detailed Insights into Monthly Sales Trends
           </p>
           <Table
             striped

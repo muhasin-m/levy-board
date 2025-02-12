@@ -11,10 +11,10 @@ const Dashboard = () => {
     <Container className="my-4">
       <Row className="mb-4 text-center text-md-start">
         <Col xs={12} md={8}>
-          <h4 className="text-dark fw-bold mb-1">Autolevy Sales Dashboard</h4>
+          <h3 className="text-dark fw-bold mb-1">Autolevy Sales Dashboard</h3>
           <p className="text-muted ">
-            Stay on top of monthly sales performance and track progress
-            effortlessly.
+            Track your car sales performance with detailed data for effective
+            decision-making.
           </p>
         </Col>
       </Row>
