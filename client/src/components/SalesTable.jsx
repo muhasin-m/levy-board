@@ -1,9 +1,10 @@
 import { useContext, useState } from "react";
-import { Table, Button, Form, Modal } from "react-bootstrap";
+import { Table, Button, Form, Modal, Alert } from "react-bootstrap";
 import { FaEdit, FaTrash } from "react-icons/fa";
 import SalesContext from "../context/SalesContext";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import "bootstrap/dist/css/bootstrap.min.css";
 
 const SalesTable = () => {
   const { sales, deleteSale, updateSale } = useContext(SalesContext);
@@ -16,7 +17,7 @@ const SalesTable = () => {
   };
 
   const handleUpdate = () => {
-    updateSale(editData); // No date involved
+    updateSale(editData);
     toast.success("Sales data updated successfully!");
     setShowModal(false);
   };
@@ -26,7 +27,6 @@ const SalesTable = () => {
     toast.error("Sales data deleted successfully!");
   };
 
-  // Sort months from January to December
   const monthOrder = [
     "January",
     "February",
@@ -42,11 +42,10 @@ const SalesTable = () => {
     "December",
   ];
 
-  const sortedSales = [...sales].sort((a, b) => {
-    return monthOrder.indexOf(a.month) - monthOrder.indexOf(b.month);
-  });
+  const sortedSales = [...sales].sort(
+    (a, b) => monthOrder.indexOf(a.month) - monthOrder.indexOf(b.month)
+  );
 
-  // Handle NaN or zero values
   const handleZeroValues = (value) => (value === 0 || isNaN(value) ? 0 : value);
 
   const calculateProgress = (sale) => {
@@ -65,59 +64,90 @@ const SalesTable = () => {
   };
 
   return (
-    <div>
-      <Table striped bordered hover responsive>
-        <thead>
-          <tr>
-            <th>Month</th>
-            <th>Planned Sales</th>
-            <th>Actual Sales</th>
-            <th>Working Days</th>
-            <th>Daily Plan</th>
-            <th>Daily Actual</th>
-            <th>Progress Today</th>
-            <th>Progress Total</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-
-        <tbody>
-          {sortedSales.map((sale) => {
-            const { dailyPlan, dailyActual, progressToday, progressTotal } =
-              calculateProgress(sale);
-
-            return (
-              <tr key={sale._id}>
-                <td>{sale.month}</td>
-                <td>{sale.plan}</td>
-                <td>{sale.actual}</td>
-                <td>{sale.workingDays}</td>
-                <td>{dailyPlan}</td>
-                <td>{dailyActual}</td>
-                <td>{progressToday}%</td>
-                <td>{progressTotal}%</td>
-                <td>
-                  <Button
-                    variant="warning"
-                    onClick={() => handleEdit(sale)}
-                    className="me-2"
-                  >
-                    <FaEdit />
-                  </Button>
-                  <Button
-                    variant="danger"
-                    onClick={() => handleDelete(sale._id)}
-                  >
-                    <FaTrash />
-                  </Button>
-                </td>
+    <div className="container mt-4">
+      {sales.length === 0 ? (
+        <Alert variant="info" className="text-center">
+          No sales data available. Please add records to view the table.
+        </Alert>
+      ) : (
+        <>
+          <h5 className="mb-4 pt-4 text-dark fw-bold">
+            Sales Performance Overview
+          </h5>
+          <p className="mb-2 pb-2 text-muted ">
+            Track your car sales performance with detailed data for effective
+            decision-making.
+          </p>
+          <Table
+            striped
+            bordered
+            hover
+            responsive
+            className="table-sm table-bordered text-center shadow-sm"
+          >
+            <thead className="bg-primary text-white">
+              <tr>
+                <th>Month</th>
+                <th>Planned Sales</th>
+                <th>Actual Sales</th>
+                <th>Working Days</th>
+                <th>Daily Plan</th>
+                <th>Daily Actual</th>
+                <th>Progress Today</th>
+                <th>Progress Total</th>
+                <th>Actions</th>
               </tr>
-            );
-          })}
-        </tbody>
-      </Table>
+            </thead>
+            <tbody>
+              {sortedSales.map((sale) => {
+                const { dailyPlan, dailyActual, progressToday, progressTotal } =
+                  calculateProgress(sale);
+                return (
+                  <tr key={sale._id}>
+                    <td>{sale.month}</td>
+                    <td>{sale.plan}</td>
+                    <td>{sale.actual}</td>
+                    <td>{sale.workingDays}</td>
+                    <td>{dailyPlan}</td>
+                    <td>{dailyActual}</td>
+                    <td
+                      className={
+                        progressToday >= 100 ? "text-success" : "text-danger"
+                      }
+                    >
+                      {progressToday}%
+                    </td>
+                    <td
+                      className={
+                        progressTotal >= 100 ? "text-success" : "text-danger"
+                      }
+                    >
+                      {progressTotal}%
+                    </td>
+                    <td>
+                      <Button
+                        variant="warning"
+                        onClick={() => handleEdit(sale)}
+                        className="me-2 btn-sm"
+                      >
+                        <FaEdit />
+                      </Button>
+                      <Button
+                        variant="danger"
+                        onClick={() => handleDelete(sale._id)}
+                        className="me-2 btn-sm"
+                      >
+                        <FaTrash />
+                      </Button>
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </Table>
+        </>
+      )}
 
-      {/* Edit Modal */}
       <Modal show={showModal} onHide={() => setShowModal(false)} centered>
         <Modal.Header closeButton>
           <Modal.Title>Edit Sales Data - {editData?.month}</Modal.Title>
@@ -164,9 +194,9 @@ const SalesTable = () => {
               </Form.Group>
 
               <Button
-                variant="primary"
+                variant="dark"
                 onClick={handleUpdate}
-                className="w-100"
+                className="w-100 mt-3"
               >
                 Update
               </Button>
@@ -174,7 +204,6 @@ const SalesTable = () => {
           )}
         </Modal.Body>
       </Modal>
-
       <ToastContainer />
     </div>
   );

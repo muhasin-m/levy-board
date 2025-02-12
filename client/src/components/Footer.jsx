@@ -11,7 +11,7 @@ const Footer = () => {
       }}
     >
       <Container>
-        &copy; {new Date().getFullYear()} Sales Dashboard. All rights reserved.
+        &copy; MUHASIN - All rights reserved - {new Date().getFullYear()}
       </Container>
     </footer>
   );

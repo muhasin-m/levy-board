@@ -5,6 +5,7 @@ import Footer from "./components/Footer";
 import NotFound from "./pages/NotFound";
 import { SalesProvider } from "./context/SalesContext";
 
+
 function App() {
   return (
     <BrowserRouter>

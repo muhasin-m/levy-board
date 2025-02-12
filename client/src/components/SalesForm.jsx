@@ -1,11 +1,11 @@
 import { useState, useContext } from "react";
-import { Form, Button } from "react-bootstrap";
+import { Form, Button, Row, Col } from "react-bootstrap";
 import { ToastContainer, toast } from "react-toastify";
-import { motion } from "framer-motion"; // For animations
+import { motion } from "framer-motion";
 import SalesContext from "../context/SalesContext";
 import "react-toastify/dist/ReactToastify.css";
 
-const SalesForm = () => {
+const SalesForm = ({ handleClose }) => {
   const { sales, addSale } = useContext(SalesContext);
 
   const months = [
@@ -33,6 +33,13 @@ const SalesForm = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleChange = (e) => {
+    if (
+      e.target.name === "plan" ||
+      e.target.name === "actual" ||
+      e.target.name === "workingDays"
+    ) {
+      if (e.target.value < 0) return;
+    }
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
@@ -55,7 +62,6 @@ const SalesForm = () => {
         draggable: true,
         theme: "colored",
       });
-
       resetForm();
       return;
     }
@@ -63,20 +69,24 @@ const SalesForm = () => {
     setIsSubmitting(true);
 
     setTimeout(() => {
-      addSale(formData); // Date is no longer included
+      addSale(formData);
 
-      toast.success("Sales data added successfully!", {
-        position: "top-right",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: false,
-        draggable: true,
-        theme: "colored",
-      });
+      toast.success(
+        "Sales data added successfully!",
+
+        {
+          position: "top-left",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: false,
+          draggable: true,
+        }
+      );
 
       resetForm();
       setIsSubmitting(false);
+      handleClose(); // Close the form after successful submission
     }, 500);
   };
 
@@ -86,84 +96,87 @@ const SalesForm = () => {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
     >
-      <Form onSubmit={handleSubmit} className="mb-4 p-3 border rounded shadow">
-        <h4 className="text-center mb-3">Add Sales Data</h4>
-
-        {/* Month Picker Dropdown */}
-        <Form.Group className="mb-3">
-          <Form.Label>Select Month</Form.Label>
-          <Form.Control
-            as="select"
-            name="month"
-            value={formData.month}
-            onChange={handleChange}
-            required
+      <Row className="justify-content-center">
+        <Col xs={12} md={12} lg={12}>
+          <Form
+            onSubmit={handleSubmit}
+            className="p-4 border rounded shadow-sm bg-light"
           >
-            <option value="">-- Select Month --</option>
-            {months.map((month, index) => (
-              <option key={index} value={month}>
-                {month}
-              </option>
-            ))}
-          </Form.Control>
-        </Form.Group>
+            {/* Month Picker Dropdown */}
+            <Form.Group className="mb-3">
+              <Form.Label>Select Month</Form.Label>
+              <Form.Control
+                as="select"
+                name="month"
+                value={formData.month}
+                onChange={handleChange}
+                required
+              >
+                <option value="">-- Select Month --</option>
+                {months.map((month, index) => (
+                  <option key={index} value={month}>
+                    {month}
+                  </option>
+                ))}
+              </Form.Control>
+            </Form.Group>
 
-        <Form.Group className="mb-3">
-          <Form.Label>Planned Sales</Form.Label>
-          <Form.Control
-            type="number"
-            name="plan"
-            value={formData.plan}
-            onChange={handleChange}
-            placeholder="Enter Planned Sales"
-            required
-          />
-        </Form.Group>
+            {/* Planned Sales Input */}
+            <Form.Group className="mb-3">
+              <Form.Label>Planned Cars Sold</Form.Label>
+              <Form.Control
+                type="number"
+                name="plan"
+                value={formData.plan}
+                onChange={handleChange}
+                placeholder="Enter planned number of cars sold"
+                min="0"
+                required
+              />
+            </Form.Group>
 
-        <Form.Group className="mb-3">
-          <Form.Label>Actual Sales</Form.Label>
-          <Form.Control
-            type="number"
-            name="actual"
-            value={formData.actual}
-            onChange={handleChange}
-            placeholder="Enter Actual Sales"
-            required
-          />
-        </Form.Group>
+            {/* Actual Sales Input */}
+            <Form.Group className="mb-3">
+              <Form.Label>Actual Cars Sold</Form.Label>
+              <Form.Control
+                type="number"
+                name="actual"
+                value={formData.actual}
+                onChange={handleChange}
+                placeholder="Enter actual number of cars sold"
+                min="0"
+                required
+              />
+            </Form.Group>
 
-        <Form.Group className="mb-3">
-          <Form.Label>Working Days</Form.Label>
-          <Form.Control
-            type="number"
-            name="workingDays"
-            value={formData.workingDays}
-            onChange={handleChange}
-            placeholder="Enter Working Days"
-            required
-          />
-        </Form.Group>
+            {/* Working Days Input */}
+            <Form.Group className="mb-3">
+              <Form.Label>Working Days</Form.Label>
+              <Form.Control
+                type="number"
+                name="workingDays"
+                value={formData.workingDays}
+                onChange={handleChange}
+                placeholder="Enter number of working days in the month"
+                min="0"
+                required
+              />
+            </Form.Group>
 
-        <motion.div
-          whileTap={{ scale: 0.95 }}
-          animate={isSubmitting ? { scale: [1, 1.05, 1] } : {}}
-          transition={{ duration: 0.3, repeat: 2 }}
-        >
-          <Button variant="primary" type="submit" className="w-100">
-            {isSubmitting ? "Adding..." : "Add Sale"}
-          </Button>
-        </motion.div>
-      </Form>
+            {/* Submit Button */}
+            <Button variant="dark" type="submit" className="w-100">
+              {isSubmitting ? "Adding..." : "Add Sale"}
+            </Button>
+          </Form>
+        </Col>
+      </Row>
 
-      {/* Toast Notification Container */}
       <ToastContainer
-        position="top-right"
+        position="top-left"
         autoClose={3000}
         hideProgressBar={false}
-        closeOnClick={true}
-        pauseOnHover={false}
-        draggable={true}
-        theme="colored"
+        closeOnClick
+        closeButton
       />
     </motion.div>
   );

@@ -7,15 +7,16 @@ import {
   ProgressBar,
   Container,
 } from "react-bootstrap";
-import { Bar, Pie, Line } from "react-chartjs-2";
+import { Bar, Doughnut, Line } from "react-chartjs-2";
 import SalesContext from "../context/SalesContext";
+import { motion } from "framer-motion";
 import "chart.js/auto";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 const ProgressCard = () => {
   const { sales } = useContext(SalesContext);
 
-  // Correct month sorting order
+  // Month sorting order
   const monthOrder = [
     "January",
     "February",
@@ -46,25 +47,27 @@ const ProgressCard = () => {
     ? ((filteredData.actual / filteredData.plan) * 100).toFixed(2)
     : "0.00";
 
+  // Chart Data
   const barData = {
     labels: ["Planned Sales", "Actual Sales"],
     datasets: [
       {
         label: "Sales Data",
         data: [filteredData?.plan || 0, filteredData?.actual || 0],
-        backgroundColor: ["#4e79a7", "#f28e2b"],
+        backgroundColor: ["#007bff", "#28a745"],
         borderRadius: 8,
       },
     ],
   };
 
-  const pieData = {
+  const doughnutData = {
     labels: ["Planned Sales", "Actual Sales"],
     datasets: [
       {
         data: [filteredData?.plan || 0, filteredData?.actual || 0],
-        backgroundColor: ["#76b7b2", "#e15759"],
+        backgroundColor: ["#17a2b8", "#ffc107"],
         borderWidth: 2,
+        hoverOffset: 10,
       },
     ],
   };
@@ -77,8 +80,9 @@ const ProgressCard = () => {
         data: [
           filteredData ? filteredData.plan / filteredData.workingDays || 0 : 0,
         ],
-        borderColor: "#59a14f",
-        fill: false,
+        borderColor: "#6f42c1",
+        fill: true,
+        backgroundColor: "rgba(111, 66, 193, 0.2)",
         tension: 0.4,
       },
       {
@@ -88,8 +92,9 @@ const ProgressCard = () => {
             ? filteredData.actual / filteredData.workingDays || 0
             : 0,
         ],
-        borderColor: "#edc949",
-        fill: false,
+        borderColor: "#dc3545",
+        fill: true,
+        backgroundColor: "rgba(220, 53, 69, 0.2)",
         tension: 0.4,
       },
     ],
@@ -97,65 +102,93 @@ const ProgressCard = () => {
 
   return (
     <Container className="d-flex justify-content-center align-items-center flex-column mt-4">
-      <Card
-        className="p-4 shadow-lg w-100"
-        style={{ maxWidth: "900px", borderRadius: "15px" }}
+      <motion.div
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8 }}
+        className="w-100"
       >
-        <h4 className="text-center mb-4 text-primary">
-          Sales Progress Overview
-        </h4>
+        <Card
+          className="p-4 shadow-sm w-100"
+          style={{
+            maxWidth: "100%",
+            borderRadius: "5px",
+            background: "#f8f9fa",
+          }}
+        >
+          <Card.Body>
+            <Card.Title>Monthly Overview</Card.Title>
+            <Card.Header className="p-2">{selectedMonth} in Review</Card.Header>
 
-        {/* Month Selection Dropdown */}
-        <Dropdown onSelect={(e) => setSelectedMonth(e)}>
-          <Dropdown.Toggle variant="outline-dark" className="w-100">
-            {selectedMonth}
-          </Dropdown.Toggle>
-          <Dropdown.Menu>
-            {sortedMonths.map((month) => (
-              <Dropdown.Item key={month} eventKey={month}>
-                {month}
-              </Dropdown.Item>
-            ))}
-          </Dropdown.Menu>
-        </Dropdown>
+            {/* Month Selection Dropdown */}
+            <Dropdown onSelect={(e) => setSelectedMonth(e)} className="mt-3">
+              <Dropdown.Toggle variant="dark" className="w-25">
+                {selectedMonth}
+              </Dropdown.Toggle>
+              <Dropdown.Menu>
+                {sortedMonths.map((month) => (
+                  <Dropdown.Item key={month} eventKey={month}>
+                    {month}
+                  </Dropdown.Item>
+                ))}
+              </Dropdown.Menu>
+            </Dropdown>
 
-        {filteredData ? (
-          <Row className="mt-4">
-            <Col md={6} sm={12} className="mb-4">
-              <h5 className="text-secondary">Sales Performance Overview</h5>
-              <Bar data={barData} />
-            </Col>
-            <Col md={6} sm={12} className="mb-4">
-              <h5 className="text-secondary">Sales Distribution</h5>
-              <Pie data={pieData} />
-            </Col>
-          </Row>
-        ) : (
-          <p className="text-center mt-4 text-danger">
-            No sales data available for {selectedMonth}.
-          </p>
-        )}
+            {filteredData ? (
+              <motion.div
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.6 }}
+              >
+                <Row className="mt-4">
+                  <Col md={6} sm={12} className="mb-4">
+                    <h5 className="text-secondary">📈 Sales Overview</h5>
+                    <Bar data={barData} />
+                  </Col>
+                  <Col md={6} sm={12} className="mb-4">
+                    <h5 className="text-secondary">📊 Sales Breakdown</h5>
+                    <Doughnut data={doughnutData} />
+                  </Col>
+                </Row>
 
-        {filteredData && (
-          <Row>
-            <Col md={6} sm={12} className="mb-4">
-              <h5 className="text-secondary">Trend Analysis</h5>
-              <Line data={lineData} />
-            </Col>
-            <Col md={6} sm={12} className="mb-4">
-              <h5 className="text-secondary">Overall Sales Progress</h5>
-              <ProgressBar
-                now={isNaN(progressTotal) ? 0 : progressTotal}
-                label={`${isNaN(progressTotal) ? 0 : progressTotal}%`}
-                striped
-                animated
-                variant="info"
-                className="shadow-sm"
-              />
-            </Col>
-          </Row>
-        )}
-      </Card>
+                <Row className="mt-3">
+                  <Col md={6} sm={12} className="mb-4">
+                    <h5 className="text-secondary">📉 Sales Trend</h5>
+                    <Line data={lineData} />
+                  </Col>
+                  <Col md={6} sm={12} className="mb-4">
+                    <h5 className="text-secondary">⚡ Overall Progress</h5>
+                    <ProgressBar
+                      now={isNaN(progressTotal) ? 0 : progressTotal}
+                      label={`${isNaN(progressTotal) ? 0 : progressTotal}%`}
+                      striped
+                      animated
+                      variant="success"
+                      className="shadow-sm"
+                    />
+                    <p className="mt-2 text-muted">
+                      {progressTotal >= 100
+                        ? "🚀 Excellent! You've exceeded the sales target!"
+                        : progressTotal >= 75
+                        ? "✅ Good job! You're close to the target."
+                        : "📉 Keep pushing! More sales needed."}
+                    </p>
+                  </Col>
+                </Row>
+              </motion.div>
+            ) : (
+              <motion.p
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.5 }}
+                className="text-center mt-4 text-danger"
+              >
+                ❌ No sales data available for {selectedMonth}.
+              </motion.p>
+            )}
+          </Card.Body>
+        </Card>
+      </motion.div>
     </Container>
   );
 };

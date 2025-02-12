@@ -18,7 +18,7 @@ const NotFound = () => {
           <p className="text-muted fs-5">
             The page you are looking for does not exist or has been moved.
           </p>
-          <Button variant="primary" size="lg" onClick={handleGoBack}>
+          <Button variant="dark" size="md" onClick={handleGoBack}>
             Go Back to Dashboard
           </Button>
         </div>
