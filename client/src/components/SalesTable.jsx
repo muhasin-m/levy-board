@@ -18,28 +18,28 @@ const SalesTable = () => {
 
   const handleUpdate = () => {
     updateSale(editData);
-    toast.success("Sales data updated successfully!");
+    toast.success("Verkaufsdaten erfolgreich aktualisiert!");
     setShowModal(false);
   };
 
   const handleDelete = (id) => {
     deleteSale(id);
-    toast.error("Sales data deleted successfully!");
+    toast.error("Verkaufsdaten erfolgreich gelöscht!");
   };
 
   const monthOrder = [
-    "January",
-    "February",
-    "March",
+    "Januar",
+    "Februar",
+    "März",
     "April",
-    "May",
-    "June",
-    "July",
+    "Mai",
+    "Juni",
+    "Juli",
     "August",
     "September",
-    "October",
+    "Oktober",
     "November",
-    "December",
+    "Dezember",
   ];
 
   const sortedSales = [...sales].sort(
@@ -64,18 +64,19 @@ const SalesTable = () => {
   };
 
   return (
-    <div className="container mt-4">
+    <div className="container mt-4 pt-3">
       {sales.length === 0 ? (
         <Alert variant="info" className="text-center">
-          No sales data available. Please add records to view the table.
+          Keine Verkaufsdaten verfügbar. Bitte fügen Sie Datensätze hinzu, um
+          die Tabelle anzuzeigen.
         </Alert>
       ) : (
         <>
-          <h5 className="mb-4 pt-4 text-dark fw-bold">
-            Sales Performance Overview
+          <h5 className="mb-2 pt-4 text-dark fw-bold">
+            Übersicht über die Verkaufsleistung
           </h5>
           <p className="mb-2 pb-2 text-muted ">
-            Detailed Insights into Monthly Sales Trends
+            Ausführliche Einblicke in die monatlichen Verkaufstrends
           </p>
           <Table
             striped
@@ -86,15 +87,15 @@ const SalesTable = () => {
           >
             <thead className="bg-primary text-white">
               <tr>
-                <th>Month</th>
-                <th>Planned Sales</th>
-                <th>Actual Sales</th>
-                <th>Working Days</th>
-                <th>Daily Plan</th>
-                <th>Daily Actual</th>
-                <th>Progress Today</th>
-                <th>Progress Total</th>
-                <th>Actions</th>
+                <th>Monat</th>
+                <th>Geplante Verkäufe</th>
+                <th>Tatsächliche Verkäufe</th>
+                <th>Arbeitstage</th>
+                <th>Tagesplan</th>
+                <th>Tagesaktuell</th>
+                <th>Fortschritt heute</th>
+                <th>Fortschritt Gesamt</th>
+                <th>Aktionen</th>
               </tr>
             </thead>
             <tbody>
@@ -149,18 +150,20 @@ const SalesTable = () => {
 
       <Modal show={showModal} onHide={() => setShowModal(false)} centered>
         <Modal.Header closeButton>
-          <Modal.Title>Edit Sales Data - {editData?.month}</Modal.Title>
+          <Modal.Title>
+            Verkaufsdaten bearbeiten - {editData?.month}
+          </Modal.Title>
         </Modal.Header>
         <Modal.Body>
           {editData && (
             <Form>
               <Form.Group controlId="formMonth">
-                <Form.Label>Month</Form.Label>
+                <Form.Label>Monat</Form.Label>
                 <Form.Control type="text" value={editData.month} disabled />
               </Form.Group>
 
               <Form.Group controlId="formPlannedSales">
-                <Form.Label>Planned Sales</Form.Label>
+                <Form.Label>Geplante Verkäufe</Form.Label>
                 <Form.Control
                   type="number"
                   value={editData.plan}
@@ -171,7 +174,7 @@ const SalesTable = () => {
               </Form.Group>
 
               <Form.Group controlId="formActualSales">
-                <Form.Label>Actual Sales</Form.Label>
+                <Form.Label>Tatsächliche Verkäufe</Form.Label>
                 <Form.Control
                   type="number"
                   value={editData.actual}
@@ -182,7 +185,7 @@ const SalesTable = () => {
               </Form.Group>
 
               <Form.Group controlId="formWorkingDays">
-                <Form.Label>Working Days</Form.Label>
+                <Form.Label>Arbeitstage</Form.Label>
                 <Form.Control
                   type="number"
                   value={editData.workingDays}
@@ -197,7 +200,7 @@ const SalesTable = () => {
                 onClick={handleUpdate}
                 className="w-100 mt-3"
               >
-                Update
+                Aktualisierung
               </Button>
             </Form>
           )}

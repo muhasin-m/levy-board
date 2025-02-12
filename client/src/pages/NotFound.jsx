@@ -14,12 +14,12 @@ const NotFound = () => {
       <Container>
         <div className="d-flex flex-column align-items-center">
           <FaExclamationTriangle size={60} className="text-warning mb-3" />
-          <h1 className="fw-bold display-4">404 - Page Not Found</h1>
+          <h1 className="fw-bold display-4">404 - Seite nicht gefunden</h1>
           <p className="text-muted fs-5">
-            The page you are looking for does not exist or has been moved.
+            Die Seite, die Sie suchen, existiert nicht oder wurde verschoben.
           </p>
           <Button variant="dark" size="md" onClick={handleGoBack}>
-            Go Back to Dashboard
+            Zurück zum Dashboard
           </Button>
         </div>
       </Container>

@@ -9,18 +9,18 @@ const SalesForm = ({ handleClose }) => {
   const { sales, addSale } = useContext(SalesContext);
 
   const months = [
-    "January",
-    "February",
-    "March",
+    "Januar",
+    "Februar",
+    "März",
     "April",
-    "May",
-    "June",
-    "July",
+    "Mai",
+    "Juni",
+    "Juli",
     "August",
     "September",
-    "October",
+    "Oktober",
     "November",
-    "December",
+    "Dezember",
   ];
 
   const [formData, setFormData] = useState({
@@ -53,7 +53,7 @@ const SalesForm = ({ handleClose }) => {
     const monthExists = sales.some((sale) => sale.month === formData.month);
 
     if (monthExists) {
-      toast.warn(`${formData.month} sales data already exists!`, {
+      toast.warn(`${formData.month} Verkaufsdaten sind bereits vorhanden!`, {
         position: "top-right",
         autoClose: 3000,
         hideProgressBar: false,
@@ -71,18 +71,14 @@ const SalesForm = ({ handleClose }) => {
     setTimeout(() => {
       addSale(formData);
 
-      toast.success(
-        "Sales data added successfully!",
-
-        {
-          position: "top-left",
-          autoClose: 3000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: false,
-          draggable: true,
-        }
-      );
+      toast.success("Verkaufsdaten erfolgreich hinzugefügt!", {
+        position: "top-left",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: false,
+        draggable: true,
+      });
 
       resetForm();
       setIsSubmitting(false);
@@ -104,7 +100,7 @@ const SalesForm = ({ handleClose }) => {
           >
             {/* Month Picker Dropdown */}
             <Form.Group className="mb-3">
-              <Form.Label>Select Month</Form.Label>
+              <Form.Label>Monat auswählen</Form.Label>
               <Form.Control
                 as="select"
                 name="month"
@@ -112,7 +108,7 @@ const SalesForm = ({ handleClose }) => {
                 onChange={handleChange}
                 required
               >
-                <option value="">-- Select Month --</option>
+                <option value="">-- Monat auswählen --</option>
                 {months.map((month, index) => (
                   <option key={index} value={month}>
                     {month}
@@ -123,13 +119,13 @@ const SalesForm = ({ handleClose }) => {
 
             {/* Planned Sales Input */}
             <Form.Group className="mb-3">
-              <Form.Label>Planned Cars Sold</Form.Label>
+              <Form.Label>Geplante verkaufte Fahrzeuge</Form.Label>
               <Form.Control
                 type="number"
                 name="plan"
                 value={formData.plan}
                 onChange={handleChange}
-                placeholder="Enter planned number of cars sold"
+                placeholder="Geplante Zahl eingeben"
                 min="0"
                 required
               />
@@ -137,13 +133,13 @@ const SalesForm = ({ handleClose }) => {
 
             {/* Actual Sales Input */}
             <Form.Group className="mb-3">
-              <Form.Label>Actual Cars Sold</Form.Label>
+              <Form.Label>Tatsächlich verkaufte Fahrzeuge</Form.Label>
               <Form.Control
                 type="number"
                 name="actual"
                 value={formData.actual}
                 onChange={handleChange}
-                placeholder="Enter actual number of cars sold"
+                placeholder="Aktuelle Zahl eingeben"
                 min="0"
                 required
               />
@@ -151,13 +147,13 @@ const SalesForm = ({ handleClose }) => {
 
             {/* Working Days Input */}
             <Form.Group className="mb-3">
-              <Form.Label>Working Days</Form.Label>
+              <Form.Label>Arbeitstage</Form.Label>
               <Form.Control
                 type="number"
                 name="workingDays"
                 value={formData.workingDays}
                 onChange={handleChange}
-                placeholder="Enter number of working days in the month"
+                placeholder="Anzahl der Arbeitstage im Monat eingeben"
                 min="0"
                 required
               />
@@ -165,7 +161,7 @@ const SalesForm = ({ handleClose }) => {
 
             {/* Submit Button */}
             <Button variant="dark" type="submit" className="w-100">
-              {isSubmitting ? "Adding..." : "Add Sale"}
+              {isSubmitting ? "Hinzufügen..." : "Verkauf hinzufügen"}
             </Button>
           </Form>
         </Col>

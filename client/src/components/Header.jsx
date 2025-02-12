@@ -1,9 +1,11 @@
 import { useState } from "react";
 import { Navbar, Container, Nav, Button, Modal } from "react-bootstrap";
+import { useLocation } from "react-router-dom";
 import SalesForm from "./SalesForm";
 
 const Header = () => {
   const [showForm, setShowForm] = useState(false);
+  const location = useLocation();
 
   // Toggle function for showing the SalesForm modal
   const handleShow = () => setShowForm(true);
@@ -23,9 +25,12 @@ const Header = () => {
           <Navbar.Toggle aria-controls="navbar-nav" />
           <Navbar.Collapse id="navbar-nav">
             <Nav className="ms-auto">
-              <Button variant="outline-light" onClick={handleShow}>
-                Add Monthly Sales
-              </Button>
+              {/* Hide the button if on 404 page */}
+              {location.pathname !== "/404" && (
+                <Button variant="outline-light" onClick={handleShow}>
+                  Monatliche Verkäufe hinzufügen
+                </Button>
+              )}
             </Nav>
           </Navbar.Collapse>
         </Container>
@@ -34,7 +39,7 @@ const Header = () => {
       {/* SalesForm Modal */}
       <Modal show={showForm} onHide={handleClose} centered>
         <Modal.Header closeButton>
-          <Modal.Title>Add Monthly Sales Data</Modal.Title>
+          <Modal.Title>Monatliche Verkaufsdaten hinzufügen</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <SalesForm handleClose={handleClose} />

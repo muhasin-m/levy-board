@@ -16,20 +16,49 @@ import "bootstrap/dist/css/bootstrap.min.css";
 const ProgressCard = () => {
   const { sales } = useContext(SalesContext);
 
-  // Month sorting order
+  if (!sales || sales.length === 0) {
+    return (
+      <Container className="d-flex justify-content-center align-items-center flex-column mt-4">
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+          className="w-100 text-center"
+        >
+          <Card
+            className="p-4 shadow-sm w-100 text-center"
+            style={{
+              borderRadius: "5px",
+              background: "#f8f9fa",
+            }}
+          >
+            <Card.Body className="d-flex flex-column align-items-center">
+              <Card.Title className="text-center">
+                Verkaufsdaten nicht verfügbar
+              </Card.Title>
+              <p className="text-muted text-center">
+                Es gibt derzeit keine Verkaufsdaten für dieses Jahr.
+              </p>
+            </Card.Body>
+          </Card>
+        </motion.div>
+      </Container>
+    );
+  }
+
   const monthOrder = [
-    "January",
-    "February",
-    "March",
+    "Januar",
+    "Februar",
+    "März",
     "April",
-    "May",
-    "June",
-    "July",
+    "Mai",
+    "Juni",
+    "Juli",
     "August",
     "September",
-    "October",
+    "Oktober",
     "November",
-    "December",
+    "Dezember",
   ];
 
   const sortedMonths = sales
@@ -37,22 +66,19 @@ const ProgressCard = () => {
     .sort((a, b) => monthOrder.indexOf(a) - monthOrder.indexOf(b));
 
   const [selectedMonth, setSelectedMonth] = useState(
-    sortedMonths[0] || "January"
+    sortedMonths[0] || "Januar"
   );
-
   const filteredData =
     sales.find((sale) => sale.month === selectedMonth) || null;
-
   const progressTotal = filteredData
     ? ((filteredData.actual / filteredData.plan) * 100).toFixed(2)
     : "0.00";
 
-  // Chart Data
   const barData = {
-    labels: ["Planned Sales", "Actual Sales"],
+    labels: ["Geplante Verkäufe", "Tatsächliche Verkäufe"],
     datasets: [
       {
-        label: "Sales Data",
+        label: "Verkaufsdaten",
         data: [filteredData?.plan || 0, filteredData?.actual || 0],
         backgroundColor: ["#007bff", "#28a745"],
         borderRadius: 8,
@@ -61,7 +87,7 @@ const ProgressCard = () => {
   };
 
   const doughnutData = {
-    labels: ["Planned Sales", "Actual Sales"],
+    labels: ["Geplante Verkäufe", "Tatsächliche Verkäufe"],
     datasets: [
       {
         data: [filteredData?.plan || 0, filteredData?.actual || 0],
@@ -73,10 +99,10 @@ const ProgressCard = () => {
   };
 
   const lineData = {
-    labels: ["Working Days"],
+    labels: ["Arbeitstage"],
     datasets: [
       {
-        label: "Daily Plan",
+        label: "Tagesplan",
         data: [
           filteredData ? filteredData.plan / filteredData.workingDays || 0 : 0,
         ],
@@ -117,10 +143,11 @@ const ProgressCard = () => {
           }}
         >
           <Card.Body>
-            <Card.Title>Monthly Overview</Card.Title>
-            <Card.Header className="p-2">{selectedMonth} in Review</Card.Header>
+            <Card.Title>Monatliche Übersicht</Card.Title>
+            <Card.Header className="p-2">
+              Rückblick auf {selectedMonth}
+            </Card.Header>
 
-            {/* Month Selection Dropdown */}
             <Dropdown onSelect={(e) => setSelectedMonth(e)} className="mt-3">
               <Dropdown.Toggle variant="dark" className="w-25">
                 {selectedMonth}
@@ -142,25 +169,26 @@ const ProgressCard = () => {
               >
                 <Row className="mt-4">
                   <Col md={6} sm={12} className="mb-4">
-                    <h5 className="text-secondary">📈 Sales Overview</h5>
+                    <h5 className="text-secondary">📈 Verkaufsübersicht</h5>
                     <Bar data={barData} />
                   </Col>
                   <Col md={6} sm={12} className="mb-4">
-                    <h5 className="text-secondary">📊 Sales Breakdown</h5>
+                    <h5 className="text-secondary">📊 Umsatzaufteilung</h5>
                     <Doughnut data={doughnutData} />
                   </Col>
                 </Row>
-
                 <Row className="mt-3">
                   <Col md={6} sm={12} className="mb-4">
-                    <h5 className="text-secondary">📉 Sales Trend</h5>
+                    <h5 className="text-secondary">📉 Umsatzentwicklung</h5>
                     <Line data={lineData} />
                   </Col>
                   <Col md={6} sm={12} className="mb-4">
-                    <h5 className="text-secondary">⚡ Overall Progress</h5>
+                    <h5 className="text-secondary">
+                      ⚡ Allgemeine Fortschritte
+                    </h5>
                     <ProgressBar
-                      now={isNaN(progressTotal) ? 0 : progressTotal}
-                      label={`${isNaN(progressTotal) ? 0 : progressTotal}%`}
+                      now={progressTotal}
+                      label={`${progressTotal}%`}
                       striped
                       animated
                       variant="success"
@@ -168,23 +196,18 @@ const ProgressCard = () => {
                     />
                     <p className="mt-2 text-muted">
                       {progressTotal >= 100
-                        ? "🚀 Excellent! You've exceeded the sales target!"
+                        ? "🚀  Ausgezeichnet! Sie haben das Verkaufsziel übertroffen!"
                         : progressTotal >= 75
-                        ? "✅ Good job! You're close to the target."
-                        : "📉 Keep pushing! More sales needed."}
+                        ? "✅ Gut gemacht! Sie sind nahe am Ziel."
+                        : "📉 Weiter Druck machen! Mehr Verkäufe nötig."}
                     </p>
                   </Col>
                 </Row>
               </motion.div>
             ) : (
-              <motion.p
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.5 }}
-                className="text-center mt-4 text-danger"
-              >
-                ❌ No sales data available for {selectedMonth}.
-              </motion.p>
+              <p className="text-center mt-4 text-danger">
+                ❌ Keine Verkaufsdaten verfügbar für {selectedMonth}.
+              </p>
             )}
           </Card.Body>
         </Card>
